@@ -1,0 +1,2 @@
+include ':app', ':webclient'
+rootProject.name='Rest Client'
