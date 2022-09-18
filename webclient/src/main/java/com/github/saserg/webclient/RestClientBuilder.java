@@ -74,9 +74,14 @@ public class RestClientBuilder<T extends Serializable> {
         return this;
     }
 
+    public RestClientBuilder<T> headers(Map<String, String> headers) {
+        this.httpHeaders.setAll(headers);
+        return this;
+    }
+
     public RestClientBuilder<T> get() {
         executorService.execute(() -> {
-            HttpEntity httpEntity = new HttpEntity<>(httpHeaders);
+            HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
             ResponseEntity<?> responseEntity = null;
             try {
                 responseEntity = restTemplate.exchange(queryUrl, HttpMethod.GET, httpEntity, responseType);
@@ -99,7 +104,7 @@ public class RestClientBuilder<T extends Serializable> {
 
     public RestClientBuilder<T> get(Object... params) {
         executorService.execute(() -> {
-            HttpEntity httpEntity = new HttpEntity<>(httpHeaders);
+            HttpEntity<?> httpEntity = new HttpEntity<>(httpHeaders);
             ResponseEntity<?> responseEntity = null;
             try {
                 responseEntity = restTemplate.exchange(queryUrl, HttpMethod.GET, httpEntity, responseType, params);
@@ -234,7 +239,7 @@ public class RestClientBuilder<T extends Serializable> {
         });
     }
 
-    private void execute(ResponseEntity responseEntity, Bundle bundle) {
+    private void execute(ResponseEntity<?> responseEntity, Bundle bundle) {
         HttpStatus httpStatus = responseEntity.getStatusCode();
         bundle.putInt("Status", responseEntity.getStatusCode().value());
         if (httpStatus.is2xxSuccessful()) {
